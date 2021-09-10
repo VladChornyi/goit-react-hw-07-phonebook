@@ -1,11 +1,15 @@
 import { useState } from 'react';
-import { connect } from 'react-redux';
-import { addContact } from '../../redux/phonebook/phonebook-actions';
+import { useDispatch, useSelector } from 'react-redux';
+import { addContact } from '../../redux/phonebook/phonebook-operations';
+
+import { getContactsSelector } from '../../redux/phonebook/phonebook-selectors';
 import s from './ContactsForm.module.css';
 
-const ContactsForm = ({ contacts, onSubmit }) => {
+const ContactsForm = () => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
+  const dispatch = useDispatch();
+  const contacts = useSelector(getContactsSelector);
 
   const onHandleSubmit = e => {
     e.preventDefault();
@@ -13,7 +17,7 @@ const ContactsForm = ({ contacts, onSubmit }) => {
     if (searchRepeat) {
       alert(`${number.name} is already in contacts`);
     } else {
-      onSubmit(name, number);
+      dispatch(addContact({ name, number }));
     }
     setName('');
     setNumber('');
@@ -68,11 +72,5 @@ const ContactsForm = ({ contacts, onSubmit }) => {
     </form>
   );
 };
-const mapStateToProps = ({ phonebook: { items } }) => ({
-  contacts: items,
-});
 
-const mapDispatchToProps = dispatch => ({
-  onSubmit: (name, number) => dispatch(addContact(name, number)),
-});
-export default connect(mapStateToProps, mapDispatchToProps)(ContactsForm);
+export default ContactsForm;

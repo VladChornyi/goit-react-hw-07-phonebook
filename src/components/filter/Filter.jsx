@@ -1,9 +1,13 @@
 import s from './Filter.module.css';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { changeFilter } from '../../redux/phonebook/phonebook-actions';
+import { getFilterSelector } from '../../redux/phonebook/phonebook-selectors';
+import { useDispatch } from 'react-redux';
 
-const Filter = ({ value, onChangeFilter }) => {
+const Filter = () => {
+  const dispatch = useDispatch();
+  const onChangeFilter = e => dispatch(changeFilter(e.target.value));
+  const value = useSelector(getFilterSelector);
   return (
     <>
       <label className={s.title}>
@@ -14,17 +18,4 @@ const Filter = ({ value, onChangeFilter }) => {
   );
 };
 
-const mapStateToProps = state => ({
-  value: state.phonebook.filter,
-});
-
-const mapDispatchToProps = dispatch => ({
-  onChangeFilter: e => dispatch(changeFilter(e.target.value)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Filter);
-
-Filter.propTypes = {
-  value: PropTypes.string,
-  onChangeFilter: PropTypes.func.isRequired,
-};
+export default Filter;
